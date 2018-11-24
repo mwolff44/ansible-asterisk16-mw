@@ -17,7 +17,7 @@
     file_type: directory
     paths: /usr/src
     patterns: "^asterisk"
-    use_regex: yes
+    use_regex: true
   register: asterisk_path
 
 - name: Install Asterisk prereqs - call a *magic* script
@@ -32,20 +32,20 @@
     chdir: "{{ asterisk_path.files.0.path }}"
     creates: "{{ item.creates }}"
   with_items:
-    - { command: './configure --libdir=/usr/lib64 --with-jansson-bundled', creates: "{{ asterisk_path.files.0.path }}/config.log" }
-    - { command: 'contrib/scripts/get_mp3_source.sh', creates: "{{ asterisk_path.files.0.path }}/addons/mp3" }
+    - {command: './configure --libdir=/usr/lib64 --with-jansson-bundled', creates: "{{ asterisk_path.files.0.path }}/config.log"}
+    - {command: 'contrib/scripts/get_mp3_source.sh', creates: "{{ asterisk_path.files.0.path }}/addons/mp3"}
 
 ### To be changed
 
 ## Reference - https://wiki.asterisk.org/wiki/display/AST/Using+Menuselect+to+Select+Asterisk+Options
-#- name: Make menuoptions template
-#  template:
+# - name: Make menuoptions template
+#   template:
 #    src: menuselect.makeopts.j2
 #    dest: "{{ asterisk_path.files.0.path }}/menuselect.makeopts"
 #
 ## Git and find . -name ".gitignore" -exec rm -rf {} \; becomes useful here for checking changed files
-#- name: Run final install for Asterisk
-#  command: "{{ item.command }}"
+# - name: Run final install for Asterisk
+#   command: "{{ item.command }}"
 #  args:
 #    chdir: "{{ asterisk_path.files.0.path }}"
 #    creates: "{{ item.creates }}"
@@ -54,8 +54,6 @@
 #    - { command: 'make menuselect.makeopts', creates: "{{ asterisk_path.files.0.path }}/codecs/.makeopts" }
 
 ###
-
-
 
 - name: Build Asterisk from tarball
   command: "{{ item }} chdir={{ iasterisk_srcdir }}"

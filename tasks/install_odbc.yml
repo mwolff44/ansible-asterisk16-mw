@@ -1,46 +1,45 @@
 ---
 # tasks file for odbc (runs before installing/compiling asterisk)
 
-- name: Install odbc 
+- name: Install odbc
   yum: "pkg={{item}} state=installed"
   with_items:
-    - unixODBC 
-    - unixODBC-devel 
-    - libtool-ltdl 
+    - unixODBC
+    - unixODBC-devel
+    - libtool-ltdl
     - libtool-ltdl-devel
     - mysql-connector-odbc
 
 - name: Configure INI for ODBC in /etc/odbcinst.ini
   ini_file:
-   dest: "/etc/odbcinst.ini"
-   section: "MySQL"
-   create: true   
-   option: "{{ item.option }}"
-   value: "{{ item.value }}"
+    dest: "/etc/odbcinst.ini"
+    section: "MySQL"
+    create: true
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
   with_items:
-    - { option: "Description", value: "ODBC for MySQL"}
-    - { option: "Driver", value:  "/usr/lib/libmyodbc5.so" }
-    - { option: "Setup", value:  "/usr/lib/libodbcmyS.so" }
-    - { option: "Driver64", value:  "/usr/lib64/libmyodbc5.so" }
-    - { option: "Setup64", value:  "/usr/lib64/libodbcmyS.so" }
-    - { option: "FileUsage", value: "1" }
-      #- { option: "Pooling", value: "yes" }
-      #- { option: "CPTimeout", value: "120" }
+    - {option: "Description", value: "ODBC for MySQL"}
+    - {option: "Driver", value: "/usr/lib/libmyodbc5.so"}
+    - {option: "Setup", value: "/usr/lib/libodbcmyS.so"}
+    - {option: "Driver64", value: "/usr/lib64/libmyodbc5.so"}
+    - {option: "Setup64", value: "/usr/lib64/libodbcmyS.so"}
+    - {option: "FileUsage", value: "1"}
+    # - {option: "Pooling", value: "yes"}
+    # - {option: "CPTimeout", value: "120"}
 
 - name: configure INI for ODBC in /etc/odbc.ini
   ini_file:
-   dest: "/etc/odbc.ini"
-   section: "asterisk-connector"
-   create: true   
-   option: "{{ item.option }}"
-   value: "{{ item.value }}"
+    dest: "/etc/odbc.ini"
+    section: "asterisk-connector"
+    create: true
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
   with_items:
-    - { option: "Description", value: "MySQL connection"}
-    - { option: "Driver", value:  "MySQL" }
-    - { option: "Database", value:  '{{iasterisk_odbc_database}}' }
-    - { option: "Server", value:  '{{iasterisk_odbc_server}}' }
-    - { option: "Port", value: "3306" }
-    - { option: "UserName", value: "root" }
-    - { option: "Password", value: "root" }
-    - { option: "Socket", value: "/var/lib/mysql/mysql.sock" }
-
+    - {option: "Description", value: "MySQL connection"}
+    - {option: "Driver", value: "MySQL"}
+    - {option: "Database", value: '{{iasterisk_odbc_database}}'}
+    - {option: "Server", value: '{{iasterisk_odbc_server}}'}
+    - {option: "Port", value: "3306"}
+    - {option: "UserName", value: "root"}
+    - {option: "Password", value: "root"}
+    - {option: "Socket", value: "/var/lib/mysql/mysql.sock"}

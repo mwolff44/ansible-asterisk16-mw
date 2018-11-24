@@ -27,7 +27,7 @@
     - make
     - patch
     - libedit-devel
-    - svn #mp3
+    - svn  # mp3
     - MariaDB-compat
 
 - name: Install useful tools via yum

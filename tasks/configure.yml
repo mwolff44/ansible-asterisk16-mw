@@ -11,28 +11,28 @@
   register: iasterisk_backup_file
 
 - name: Make backup of asterisk.conf
-#  when: iasterisk_backup_file.stat.exists == False
+  # when: iasterisk_backup_file.stat.exists == False
   shell: rsync -ci /etc/asterisk/asterisk.conf /etc/asterisk/original.asterisk.conf
   register: rsync_result
   changed_when: "rsync_result.stdout != ''"
 
 - name: Modify provided asterisk.conf to strip remarks (INI module can't process without it)
-#  when: iasterisk_backup_file.stat.exists == False
+  # when: iasterisk_backup_file.stat.exists == False
   command: 'sed -i -e "/^\s*;/d" /etc/asterisk/asterisk.conf'
 
 - name: Set INI options in asterisk.conf to reflect asterisk user
-  ini_file: 
-    dest: "/etc/asterisk/asterisk.conf" 
-    section: "{{ item.section }}" 
-    option: "{{ item.option }}" 
-    value: "{{ item.value }}" 
+  ini_file:
+    dest: "/etc/asterisk/asterisk.conf"
+    section: "{{ item.section }}"
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
   with_items:
-    - { section: "files", option: "astctlpermissions", value: "0775"}
-    - { section: "files", option: "astctlowner", value: '{{asterisk_user}}'}
-    - { section: "files", option: "astctlgroup", value: '{{asterisk_group}}'}
-    - { section: "files", option: "astctl", value: 'asterisk.ctl'}
-    - { section: "options", option: "runuser", value: '{{asterisk_user}}'}
-    - { section: "options", option: "rungroup", value: '{{asterisk_group}}'}
+    - {section: "files", option: "astctlpermissions", value: "0775"}
+    - {section: "files", option: "astctlowner", value: '{{asterisk_user}}'}
+    - {section: "files", option: "astctlgroup", value: '{{asterisk_group}}'}
+    - {section: "files", option: "astctl", value: 'asterisk.ctl'}
+    - {section: "options", option: "runuser", value: '{{asterisk_user}}'}
+    - {section: "options", option: "rungroup", value: '{{asterisk_group}}'}
 
 - name: Fix INI file to be asterisk-ish-y
   command: 'sed -i -e "s/= >/=>/g" /etc/asterisk/asterisk.conf'
@@ -41,22 +41,21 @@
 - name: Set ownership on important directories for the asterisk user
   file: "path={{ item.path }} owner={{ asterisk_user }} group={{ asterisk_group}} recurse=yes"
   with_items:
-    - { path: '/usr/lib64/asterisk/' }
-    - { path: '/var/lib/asterisk/' }
-    - { path: '/var/spool/asterisk/' }
-    - { path: '/var/log/asterisk/' }
-    - { path: '/var/run/asterisk/' }
+    - {path: '/usr/lib64/asterisk/'}
+    - {path: '/var/lib/asterisk/'}
+    - {path: '/var/spool/asterisk/'}
+    - {path: '/var/log/asterisk/'}
+    - {path: '/var/run/asterisk/'}
 
 - name: Set ownership on important files for the asterisk user
   file: "path={{ item.path }} owner={{ asterisk_user }} group={{ asterisk_group}}"
   with_items:
-    - { path: '/usr/sbin/asterisk' }
+    - {path: '/usr/sbin/asterisk'}
 
-
-# ------------------------ - - - - - 
+# ------------------------ - - - - -
 # REFERENCE FROM:
 # http://dougbtv.com/asterisk/2012/09/20/tighting-down-asterisk-on-centos-dont-run-as-root/
-# ------------------------ - - - - - 
+# ------------------------ - - - - -
 
 # # You probably want to have something less obvious than "asterisk" as the user name, fwiw.
 # [user@host ~]$ /usr/sbin/useradd asterisk
@@ -82,7 +81,7 @@
 
 # ------------------------ - - - - -
 
-# What's left out in Leif's process is making sure your asterisk.ctl file in /var/run/asterisk/ has proper permission so that users of the asterisk group can write to it. 
+# What's left out in Leif's process is making sure your asterisk.ctl file in /var/run/asterisk/ has proper permission so that users of the asterisk group can write to it.
 # These settings can be found in the asterisk.conf file as well.
 
 # ; Changing the following lines may compromise your security.
