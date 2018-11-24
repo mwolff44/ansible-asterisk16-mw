@@ -1,2 +1,13 @@
 ---
-# vars file for ansible-asterisk16-mw
+# vars file for install-asterisk
+asterisk_user: asterisk
+asterisk_group: asterisk
+iasterisk_srcdir: /usr/src/asterisk/
+iasterisk_url: http://downloads.asterisk.org/pub/telephony/asterisk/asterisk-16-current.tar.gz
+iasterisk_url_sounds: http://downloads.asterisk.org/pub/telephony/sounds/asterisk-core-sounds-fr-ulaw-current.tar.gz
+iasterisk_path_sound: /var/lib/asterisk/sounds/fr
+iasterisk_odbc_support: true
+iasterisk_odbc_database: alotim
+iasterisk_odbc_server: localhost
+iasterisk_odbc_user: root
+iasterisk_odbc_password: root

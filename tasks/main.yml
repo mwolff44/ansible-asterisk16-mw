@@ -1,2 +1,14 @@
 ---
-# tasks file for ansible-asterisk16-mw
+- include_tasks: install_odbc.yml
+  when: iasterisk_odbc_support
+
+- include_tasks: install_yum_packages.yml
+
+- include_tasks: install.yml
+  when: not skip_install is defined
+
+- include_tasks: configure.yml
+  when: configure_user is defined
+
+- include_tasks: configure_odbc.yml
+  when: iasterisk_odbc_support

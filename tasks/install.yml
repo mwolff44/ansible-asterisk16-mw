@@ -1,0 +1,84 @@
+---
+# tasks file for install-asterisk
+- include_tasks: pjsip.yml
+  when: use_pjsip
+
+- name: Remove existing install source dir
+  file: "path={{ iasterisk_srcdir }} state=absent"
+
+- name: Create install source dir
+  file: "path={{ iasterisk_srcdir }} state=directory"
+
+- name: Download and extract Asterisk source
+  unarchive: "src={{ iasterisk_url }} dest={{ iasterisk_srcdir }} remote_src=yes extra_opts=--strip-components=1"
+
+- name: Find Asterisk path
+  find:
+    file_type: directory
+    paths: /usr/src
+    patterns: "^asterisk"
+    use_regex: yes
+  register: asterisk_path
+
+- name: Install Asterisk prereqs - call a *magic* script
+  command: "contrib/scripts/install_prereq install"
+  args:
+    chdir: "{{ asterisk_path.files.0.path }}"
+  changed_when: false
+
+- name: Configure and install asterisk
+  command: "{{ item.command }}"
+  args:
+    chdir: "{{ asterisk_path.files.0.path }}"
+    creates: "{{ item.creates }}"
+  with_items:
+    - { command: './configure --libdir=/usr/lib64 --with-jansson-bundled', creates: "{{ asterisk_path.files.0.path }}/config.log" }
+    - { command: 'contrib/scripts/get_mp3_source.sh', creates: "{{ asterisk_path.files.0.path }}/addons/mp3" }
+
+### To be changed
+
+## Reference - https://wiki.asterisk.org/wiki/display/AST/Using+Menuselect+to+Select+Asterisk+Options
+#- name: Make menuoptions template
+#  template:
+#    src: menuselect.makeopts.j2
+#    dest: "{{ asterisk_path.files.0.path }}/menuselect.makeopts"
+#
+## Git and find . -name ".gitignore" -exec rm -rf {} \; becomes useful here for checking changed files
+#- name: Run final install for Asterisk
+#  command: "{{ item.command }}"
+#  args:
+#    chdir: "{{ asterisk_path.files.0.path }}"
+#    creates: "{{ item.creates }}"
+#  register: install_asterisk
+#  with_items:
+#    - { command: 'make menuselect.makeopts', creates: "{{ asterisk_path.files.0.path }}/codecs/.makeopts" }
+
+###
+
+
+
+- name: Build Asterisk from tarball
+  command: "{{ item }} chdir={{ iasterisk_srcdir }}"
+  with_items:
+    - make menuselect.makeopts
+    - sed -i -e 's/res_snmp//' menuselect.makeopts
+    - sed -i -e 's/chan_sip//' menuselect.makeopts
+    - sed -i -e 's/res_http_websocket//' menuselect.makeopts
+    - sed -i -e 's/cdr_csv//' menuselect.makeopts
+    - sed -i -e 's/chan_pjsip//' menuselect.makeopts
+    - sed -i -e 's/app_mysql//' menuselect.makeopts
+    - sed -i -e 's/format_mp3//' menuselect.makeopts
+    - make
+    - make uninstall
+    - make install
+    - make config
+    - make samples
+
+- name: Create install dir
+  file: "path={{ iasterisk_srcdir }} state=directory"
+
+- name: Create sounds dir
+  file: "path={{ iasterisk_path_sound }} state=directory"
+
+- name: Download and extract Asterisk sounds
+  unarchive: "src={{ iasterisk_url_sounds }} dest={{ iasterisk_path_sound }} remote_src=yes extra_opts=--strip-components=1"

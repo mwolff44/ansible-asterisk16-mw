@@ -1,2 +1,17 @@
 ---
-# defaults file for ansible-asterisk16-mw
+# defaults file for install-asterisk
+use_pjsip: false
+
+asterisk_config_files:
+  - extensions.conf
+
+iasterisk_odbc_support: false
+
+# set asterisk user / group and rights
+configure_user: true
+
+# Useful tools
+asterisk_tools:
+  - sox
+  - lame
+  - mpg123

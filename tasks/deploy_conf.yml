@@ -1,0 +1,12 @@
+---
+- name: Asterisk | copy conf files
+  file:
+    src: /var/www/html/alotim/asterisk/{{ item }}.conf
+    dest: /etc/asterisk/{{ item }}.conf
+    backup: yes
+    owner: asterisk
+    group: asterisk
+  become: yes
+  with_items: "{{ asterisk_config_files }}"
+  notify: Restart asterisk
+
