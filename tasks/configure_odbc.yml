@@ -8,7 +8,7 @@
   with_items:
     - {option: "enabled", value: "yes"}
     - {option: "dsn", value: "asterisk-connector"}
-    - {option: "username", value: '{{iasterisk_odbc_user}}'}
-    - {option: "password", value: '{{iasterisk_odbc_password}}'}
+    - {option: "username", value: '{{asterisk_odbc_user}}'}
+    - {option: "password", value: '{{asterisk_odbc_password}}'}
     # - {option: "max_connections", value: "1"}
     - {option: "pre-connect", value: "yes"}

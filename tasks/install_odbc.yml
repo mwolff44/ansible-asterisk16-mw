@@ -1,14 +1,8 @@
 ---
-# tasks file for odbc (runs before installing/compiling asterisk)
-
 - name: Install odbc
-  yum: "pkg={{item}} state=installed"
-  with_items:
-    - unixODBC
-    - unixODBC-devel
-    - libtool-ltdl
-    - libtool-ltdl-devel
-    - mysql-connector-odbc
+  yum:
+    name: "{{asterisk_odbc_dep}}"
+    state: installed
 
 - name: Configure INI for ODBC in /etc/odbcinst.ini
   ini_file:
@@ -19,9 +13,9 @@
     value: "{{ item.value }}"
   with_items:
     - {option: "Description", value: "ODBC for MySQL"}
-    - {option: "Driver", value: "/usr/lib/libmyodbc5.so"}
+    - {option: "Driver", value: "/usr/src/mysql-connector-odbc-8.0.13-linux-glibc2.12-x86-64bit/lib/libmyodbc8a.so"}
     - {option: "Setup", value: "/usr/lib/libodbcmyS.so"}
-    - {option: "Driver64", value: "/usr/lib64/libmyodbc5.so"}
+    - {option: "Driver64", value: "/usr/src/mysql-connector-odbc-8.0.13-linux-glibc2.12-x86-64bit/lib/libmyodbc8a.so"}
     - {option: "Setup64", value: "/usr/lib64/libodbcmyS.so"}
     - {option: "FileUsage", value: "1"}
     # - {option: "Pooling", value: "yes"}
@@ -37,9 +31,9 @@
   with_items:
     - {option: "Description", value: "MySQL connection"}
     - {option: "Driver", value: "MySQL"}
-    - {option: "Database", value: '{{iasterisk_odbc_database}}'}
-    - {option: "Server", value: '{{iasterisk_odbc_server}}'}
+    - {option: "Database", value: '{{asterisk_odbc_database}}'}
+    - {option: "Server", value: '{{asterisk_odbc_server}}'}
     - {option: "Port", value: "3306"}
-    - {option: "UserName", value: "root"}
-    - {option: "Password", value: "root"}
+    # - {option: "UserName", value: "root"}
+    # - {option: "Password", value: "root"}
     - {option: "Socket", value: "/var/lib/mysql/mysql.sock"}
