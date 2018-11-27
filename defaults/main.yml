@@ -1,17 +1,45 @@
 ---
-# defaults file for install-asterisk
-use_pjsip: false
-
 asterisk_config_files:
   - extensions.conf
 
-iasterisk_odbc_support: false
+asterisk_odbc_support: false
+
+asterisk_source_dep:
+  - kernel-headers
+  - gcc
+  - gcc-c++
+  - cpp
+  - ncurses
+  - ncurses-devel
+  - libxml2
+  - libxml2-devel
+  - sqlite
+  - sqlite-devel
+  - openssl-devel
+  - newt-devel
+  - kernel-devel
+  - libuuid-devel
+  - net-snmp-devel
+  - bzip2
+  - jansson-devel
+  - make
+  - patch
+  - libedit-devel
+  - svn  # mp3
 
 # set asterisk user / group and rights
 configure_user: true
+
+asterisk_odbc_dep:
+  - unixODBC
+  - unixODBC-devel
+  - libtool-ltdl
+  - libtool-ltdl-devel
+  - mysql-connector-odbc
 
 # Useful tools
 asterisk_tools:
   - sox
   - lame
   - mpg123
+  - rsync

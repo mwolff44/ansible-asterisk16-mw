@@ -1,6 +1,6 @@
 ---
 - include_tasks: install_odbc.yml
-  when: iasterisk_odbc_support
+  when: asterisk_odbc_support
 
 - include_tasks: install_yum_packages.yml
 
@@ -11,4 +11,10 @@
   when: configure_user is defined
 
 - include_tasks: configure_odbc.yml
-  when: iasterisk_odbc_support
+  when: asterisk_odbc_support
+
+- name: Make sure asterisk is restarted if install is configured
+  service:
+    name: asterisk
+    state: restarted
+  when: not skip_install is defined

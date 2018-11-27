@@ -7,8 +7,6 @@ env:
     - ROLE_NAME: asterisk16
   matrix:
     - MOLECULE_DISTRO: centos7
-    - MOLECULE_DISTRO: ubuntu1604
-    - MOLECULE_DISTRO: debian9
 
 install:
   # Install test dependencies.
