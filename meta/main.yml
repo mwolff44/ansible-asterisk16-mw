@@ -9,7 +9,7 @@ galaxy_info:
   license: "license (BSD, MIT)"
   min_ansible_version: 2.7
   platforms:
-    - name: Centos
+    - name: EL
       version:
         - 7
   galaxy_tags:
